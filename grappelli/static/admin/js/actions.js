@@ -116,8 +116,21 @@
         // TRUSTED EDITORS SHOULD KNOW WHAT TO DO
         
         // GRAPPELLI CUSTOM: submit on select
+        // Fix: If on given page there are multiple select boxes then all the boxes have change event
+        // When select boxes are rendedred all the boxes have default value as "" or blank
+        // Following fix will trigger form submit when all the actions select boxes have value otherwise skipped
         $(options.actionSelect).attr("autocomplete", "off").change(function(evt){
-            $(this).parents("form").submit();
+            var triggerEvent = true;
+            $(options.actionSelect).each(function(){
+                if(triggerEvent && $(this).val() === "" ){
+                    triggerEvent = false;
+                    return false;
+                }
+            });
+
+            if(triggerEvent){
+                $(this).parents("form").submit();    
+            }
         });
         
     };
